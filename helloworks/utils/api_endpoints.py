@@ -1,12 +1,10 @@
 from .constants import PRODUCTION
 
 class ApiEndpoints(object):
-    def __init__(self, env, version='v3'):
+    def __init__(self, version='v3'):
         self.env = env
         self.version = version
-        self.API_URL = {
-            PRODUCTION: 'https://api.helloworks.com' 
-        }
+        self.API_URL = 'https://api.helloworks.com'
         self.API_ENDPOINTS = {
             'v3': {
                 'auth_token': 'token/{}',
@@ -24,7 +22,7 @@ class ApiEndpoints(object):
         }
 
     def __generate_url(self, url):
-        endpoint = f'{self.API_URL[self.env]}/{self.version}/{self.API_ENDPOINTS[self.version][url]}'
+        endpoint = f'{self.API_URL}/{self.version}/{self.API_ENDPOINTS[self.version][url]}'
         return endpoint
 
     def auth_token(self, api_key_id):

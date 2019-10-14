@@ -4,9 +4,9 @@ from time import time
 
 
 class HwAccess(object):
-    def __init__(self, api_key_id, API_KEY_VALUE, env):
+    def __init__(self, api_key_id, API_KEY_VALUE):
         self.request = HwRequest()
-        self.endpoints = ApiEndpoints(env)
+        self.endpoints = ApiEndpoints()
         self.api_key_id = api_key_id
         self.API_KEY_VALUE = API_KEY_VALUE
         self.expires_at = 0
