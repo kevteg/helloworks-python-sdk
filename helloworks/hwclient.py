@@ -1,11 +1,11 @@
-from .utils import ApiEndpoints, HwRequest, HwAccess, PRODUCTION
+from .utils import ApiEndpoints, HwRequest, HwAccess
 
 class HwClient(object):
 
     def __init__(self, api_key_id, API_KEY_VALUE):
         self.request = HwRequest()
-        self.endpoints = ApiEndpoints(PRODUCTION)
-        self.access = HwAccess(api_key_id, API_KEY_VALUE, PRODUCTION)
+        self.endpoints = ApiEndpoints()
+        self.access = HwAccess(api_key_id, API_KEY_VALUE)
         
     def create_workflow_instance(self,
                                  workflow_id,
