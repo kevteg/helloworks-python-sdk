@@ -1,8 +1,6 @@
-from .constants import PRODUCTION
 
 class ApiEndpoints(object):
     def __init__(self, version='v3'):
-        self.env = env
         self.version = version
         self.API_URL = 'https://api.helloworks.com'
         self.API_ENDPOINTS = {
