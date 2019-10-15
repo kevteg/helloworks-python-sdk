@@ -1,6 +1,4 @@
 from .utils import ApiEndpoints, HwRequest, HwAccess, _file_downloader, _clean_dict 
-#TODO
-#WRITE DOCS FOR EACH METHOD
 
 class HwClient(object):
 
@@ -66,7 +64,7 @@ class HwClient(object):
 
     def _post_workflow_instance(self, endpoint, **params):
         token = self.access.get_jwt_token()
-        params = self._clean_dict(params)
+        params = _clean_dict(params)
 
         request = self.request.post(endpoint, token, params)
         return request
