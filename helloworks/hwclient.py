@@ -22,7 +22,7 @@ class HwClient(object):
             Method to create an instance of a Workflow to send out to a user.
         """
         create_workflow_url = self.endpoints.create_workflow_instance()
-        return self._post_workflow_instance(create_workflow_url,
+        dict_response = self._post_workflow_instance(create_workflow_url,
                                             workflow_id=workflow_id,
                                             participants=participants,
                                             merge_fields=merge_fields,
@@ -33,6 +33,8 @@ class HwClient(object):
                                             delegated_authentication=delegated_authentication,
                                             metadata=metadata,
                                             document_delivery_type=document_delivery_type)
+
+        return dict_response
 
 
     def preview_workflow_instance(self,
@@ -50,7 +52,7 @@ class HwClient(object):
             Method to create a preview instance of a Workflow to send out to a user.
         """
         preview_workflow_url = self.endpoints.preview_workflow_instance()
-        return self._post_workflow_instance(preview_workflow_url,
+        dict_response = self._post_workflow_instance(preview_workflow_url,
                                             workflow_id=workflow_id,
                                             participants=participants,
                                             merge_fields=merge_fields,
@@ -61,13 +63,7 @@ class HwClient(object):
                                             delegated_authentication=delegated_authentication,
                                             metadata=metadata,
                                             document_delivery_type=document_delivery_type)
-
-    def _post_workflow_instance(self, endpoint, **params):
-        token = self.access.get_jwt_token()
-        params = _clean_dict(params)
-
-        request = self.request.post(endpoint, token, params)
-        return request
+        return dict_response
 
     def cancel_workflow_instance(self, workflow_instance_id):
         """
@@ -75,8 +71,8 @@ class HwClient(object):
         """
         cancel_workflow_url = self.endpoints.cancel_workflow_instance(workflow_instance_id)
         token = self.access.get_jwt_token()
-        request = self.request.put(cancel_workflow_url, token)
-        return request
+        response = self.request.put(cancel_workflow_url, token)
+        return response.json()
 
     def get_workflow_instance(self, workflow_instance_id):
         """
@@ -84,8 +80,8 @@ class HwClient(object):
         """
         get_workflow_url = self.endpoints.get_workflow_instance(workflow_instance_id)
         token = self.access.get_jwt_token()
-        request = self.request.get(get_workflow_url, token)
-        return request
+        response = self.request.get(get_workflow_url, token)
+        return response.json().get('data')
 
     def get_workflow_instance_document(self, workflow_instance_id, document_id, get_stream=False):
         """
@@ -121,17 +117,17 @@ class HwClient(object):
 
         get_workflow_instance_steps_url = self.endpoints.get_workflow_instance_steps(workflow_instance_id)
         token = self.access.get_jwt_token()
-        request = self.request.get(get_workflow_instance_steps_url, token)
-        return request
+        response = self.request.get(get_workflow_instance_steps_url, token)
+        return response.json().get('data')
 
-    def get_authenticated_link_for_workflow_instances_step(self, workflow_instance_id, step_id):
+    def get_authenticated_link_for_workflow_instance_step(self, workflow_instance_id, step_id):
         """
             Method to get the authenticated link for a workflow instance step
         """
         get_authentiated_link_for_workflow_instances_step_url = self.endpoints.get_authenticated_link_for_workflow_instances_step(workflow_instance_id, step_id)
         token = self.access.get_jwt_token()
-        request = self.request.get(get_authentiated_link_for_workflow_instances_step_url, token)
-        return request
+        response = self.request.get(get_authentiated_link_for_workflow_instances_step_url, token)
+        return response.json().get('data')
 
     def save_setting_with_logo_file(self, **kwars):
         raise NotImplementedError('This method has not been implemented yet')
@@ -143,3 +139,9 @@ class HwClient(object):
             return request
         return _file_downloader(file_name, request)
 
+    def _post_workflow_instance(self, endpoint, **params):
+        token = self.access.get_jwt_token()
+        params = _clean_dict(params)
+
+        response = self.request.post(endpoint, token, params)
+        return response.json().get('data')
