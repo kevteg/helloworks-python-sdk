@@ -1,4 +1,5 @@
 import pytest
+import requests
 from helloworks import HwClient
 import json
 
@@ -68,42 +69,46 @@ def participants():
         }
     }
 
-@pytest.fixture
-def fake_create_preview_instance(monkeypatch):
-    def fake_method(*args, **kwargs):
-        return get_response(post_create_preview_workflow_payload )
-
-    monkeypatch.setattr('requests.post', fake_method)
 
 @pytest.fixture
-def fake_cancel_workflow_instance(monkeypatch):
-    def fake_method(*args, **kwargs):
-        return get_response({} )
+def fake_method(monkeypatch):
+    def _(function, payload):
+        def method(*args, **kwargs):
+            return get_response(payload)
+                                                                
+        monkeypatch.setattr(function, method)
+    return _
 
-    monkeypatch.setattr('requests.put', fake_method)
+
+@pytest.fixture
+def fake_create_preview_instance(fake_method):
+    fake_method('requests.post', post_create_preview_workflow_payload)
+
+
+@pytest.fixture
+def fake_cancel_workflow_instance(fake_method):
+    fake_method('requests.put', {}) 
+
 
 @pytest.fixture
 def fake_get_workflow_instance(monkeypatch):
-    def fake_method(*args, **kwargs):
-        url = args[0]
+    def fake_method(url, **kwargs):
         workflow_instance_id = url.split('/')[-1]
         return get_response(get_workflow(workflow_instance_id))
 
     monkeypatch.setattr('requests.get', fake_method)
 
-@pytest.fixture
-def fake_get_workflow_instance_steps(monkeypatch):
-    def fake_method(*args, **kwargs):
-        return get_response(get_workflow_step)
-
-    monkeypatch.setattr('requests.get', fake_method)
 
 @pytest.fixture
-def fake_get_workflow_steps_authenticated_link(monkeypatch):
-    def fake_method(*args, **kwargs):
-        return get_response(get_authenticated_link_payload)
+def fake_get_workflow_instance_steps(fake_method):
+    fake_method('requests.get', get_workflow_step) 
 
-    monkeypatch.setattr('requests.get', fake_method)
+
+@pytest.fixture
+def fake_get_workflow_steps_authenticated_link(fake_method):
+    fake_method('requests.get', get_authenticated_link_payload) 
+    
+
 
 @pytest.fixture
 def fake_auth(monkeypatch):
@@ -112,6 +117,16 @@ def fake_auth(monkeypatch):
 
     monkeypatch.setattr('helloworks.utils.access.HwAccess._get_jwt_token', fake_get_jwt_token)
 
+
 @pytest.fixture
 def hwclient(fake_auth):
     return HwClient("api_key_id", "API_KEY_VALUE")
+
+
+@pytest.fixture
+def fake_file_downloader(fake_method, monkeypatch):
+    def fake_file_method(*args):
+        return True
+
+    fake_method('requests.get', {}) 
+    monkeypatch.setattr('helloworks.utils.helper._file_downloader', fake_file_method)
