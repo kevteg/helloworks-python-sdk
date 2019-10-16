@@ -30,3 +30,17 @@ def test_authenticated_link_for_workflow_instance_step(fake_get_workflow_steps_a
     response = hwclient.get_authenticated_link_for_workflow_instance_step("8iiSbkFMiCoqAnpG", "participant_QIxDNu_signer_step")
     assert 'url' in response
 
+
+def test_workflow_instance_documents(fake_file_downloader, hwclient):
+    response = hwclient.get_workflow_instance_documents("8iiSbkFMiCoqAnpG")
+    assert response.status_code == 200
+
+
+def test_workflow_instance_audit_trail(fake_file_downloader, hwclient):
+    response = hwclient.get_workflow_instance_audit_trail("8iiSbkFMiCoqAnpG")
+    assert response.status_code == 200
+
+
+def test_workflow_instance_document(fake_file_downloader, hwclient):
+    response = hwclient.get_workflow_instance_document("8iiSbkFMiCoqAnpG","Form_WnGEdO")
+    assert response.status_code == 200
