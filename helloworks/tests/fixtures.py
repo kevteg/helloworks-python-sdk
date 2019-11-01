@@ -118,7 +118,7 @@ def fake_get_workflow_steps_authenticated_link(fake_method):
 
 
 @pytest.fixture
-def fake_document_link(monkeypatch):
+def fake_document_link(fake_method):
     fake_method('requests.get', get_document_link_payload)
 
 
