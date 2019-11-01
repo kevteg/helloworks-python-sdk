@@ -72,6 +72,8 @@ class HwClient(object):
         cancel_workflow_url = self.endpoints.cancel_workflow_instance(workflow_instance_id)
         token = self.access.get_jwt_token()
         response = self.request.put(cancel_workflow_url, token)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
         return response.json()
 
     def get_workflow_instance(self, workflow_instance_id):
@@ -81,6 +83,8 @@ class HwClient(object):
         get_workflow_url = self.endpoints.get_workflow_instance(workflow_instance_id)
         token = self.access.get_jwt_token()
         response = self.request.get(get_workflow_url, token)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
         return response.json().get('data')
 
     def get_workflow_instance_document(self, workflow_instance_id, document_id, get_request=True):
@@ -118,6 +122,21 @@ class HwClient(object):
         get_workflow_instance_steps_url = self.endpoints.get_workflow_instance_steps(workflow_instance_id)
         token = self.access.get_jwt_token()
         response = self.request.get(get_workflow_instance_steps_url, token)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
+        return response.json().get('data')
+
+    def get_document_link(self, workflow_instance_id):
+        """
+            For the specified workflow instance, get the step id, the role that will be completing the step,
+            the signer's full name, and the unauthenticated url that can be used to start entering information.
+        """
+
+        get_document_link = self.endpoints.get_document_link(workflow_instance_id)
+        token = self.access.get_jwt_token()
+        response = self.request.get(get_document_link, token)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
         return response.json().get('data')
 
     def get_authenticated_link_for_workflow_instance_step(self, workflow_instance_id, step_id):
@@ -127,6 +146,8 @@ class HwClient(object):
         get_authentiated_link_for_workflow_instances_step_url = self.endpoints.get_authenticated_link_for_workflow_instances_step(workflow_instance_id, step_id)
         token = self.access.get_jwt_token()
         response = self.request.get(get_authentiated_link_for_workflow_instances_step_url, token)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
         return response.json().get('data')
 
     def save_setting_with_logo_file(self, **kwars):
@@ -144,4 +165,6 @@ class HwClient(object):
         params = _clean_dict(params)
 
         response = self.request.post(endpoint, token, params)
+        if response.status_code != 200:
+            raise Exception(response.json().get('error', 'internal error'))
         return response.json().get('data')
