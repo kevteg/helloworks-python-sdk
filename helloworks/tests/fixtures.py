@@ -1,5 +1,4 @@
 import pytest
-import requests
 from helloworks import HwClient
 import json
 
@@ -8,9 +7,9 @@ post_create_preview_workflow_payload = {
          'id': '8iiSbkFMiCoqAnpG',
          'mode': 'test',
          'steps': [{'participant': 'Kevin Hernandez',
-                 'role': 'Candidate',
-                 'step': 'participant_QIxDNu_signer_step',
-                 'url': 'https://app.helloworks.com/entry/view_instance/T5kezKNj2DOU9Dl1'}]
+                    'role': 'Candidate',
+                    'step': 'participant_QIxDNu_signer_step',
+                    'url': 'https://app.helloworks.com/entry/view_instance/T5kezKNj2DOU9Dl1'}]
     }
 }
 
@@ -19,6 +18,12 @@ get_authenticated_link_payload = {
         "url": "https://app.helloworks.com/authenticated-url"
     }
 }
+
+
+get_document_link_payload = {
+    'data': "https://app.helloworks.com/files-url"
+}
+
 
 def get_workflow(webhook_instance_id):
     response = {
@@ -42,6 +47,7 @@ def get_workflow(webhook_instance_id):
     }
     return response
 
+
 get_workflow_step = {
     'data': [{
         'participant': 'Kevin Hernandez',
@@ -49,6 +55,7 @@ get_workflow_step = {
         'step': 'participant_QIxDNu_signer_step',
         'url': 'https://app.helloworks.com/entry/view_instance/GzkJVC8VggOelpOr'}]
 }
+
 
 def get_response(payload):
     class Data:
@@ -58,6 +65,7 @@ def get_response(payload):
         def json(self):
             return payload
     return Data()
+
 
 @pytest.fixture
 def participants():
@@ -75,7 +83,7 @@ def fake_method(monkeypatch):
     def _(function, payload):
         def method(*args, **kwargs):
             return get_response(payload)
-                                                                
+
         monkeypatch.setattr(function, method)
     return _
 
@@ -87,7 +95,7 @@ def fake_create_preview_instance(fake_method):
 
 @pytest.fixture
 def fake_cancel_workflow_instance(fake_method):
-    fake_method('requests.put', {}) 
+    fake_method('requests.put', {})
 
 
 @pytest.fixture
@@ -101,13 +109,17 @@ def fake_get_workflow_instance(monkeypatch):
 
 @pytest.fixture
 def fake_get_workflow_instance_steps(fake_method):
-    fake_method('requests.get', get_workflow_step) 
+    fake_method('requests.get', get_workflow_step)
 
 
 @pytest.fixture
 def fake_get_workflow_steps_authenticated_link(fake_method):
-    fake_method('requests.get', get_authenticated_link_payload) 
-    
+    fake_method('requests.get', get_authenticated_link_payload)
+
+
+@pytest.fixture
+def fake_document_link(monkeypatch):
+    fake_method('requests.get', get_document_link_payload)
 
 
 @pytest.fixture
@@ -128,5 +140,5 @@ def fake_file_downloader(fake_method, monkeypatch):
     def fake_file_method(*args):
         return True
 
-    fake_method('requests.get', {}) 
+    fake_method('requests.get', {})
     monkeypatch.setattr('helloworks.utils.helper._file_downloader', fake_file_method)
