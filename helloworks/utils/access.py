@@ -29,5 +29,8 @@ class HwAccess(object):
         return self._process_response(response)
 
     def _process_response(self, response):
-        data = response.json().get('data', {})
-        return data.get('expires_at'), data.get('token')
+        if response.status_code == 200:
+            data = response.json().get('data', {})
+            return data.get('expires_at'), data.get('token')
+        else:
+            raise Exception(response.json().get('error', 'Internal error'))
