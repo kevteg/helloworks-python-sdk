@@ -14,6 +14,7 @@ class ApiEndpoints(object):
                 'get_workflow_instance_audit_trail': 'workflow_instances/{}/audit_trail',
                 'get_workflow_instance_documents': 'workflow_instances/{}/documents',
                 'get_workflow_instance_steps': 'workflow_instances/{}/steps',
+                'get_document_link': 'workflow_instances/{}/document_link',
                 'get_authenticated_link_for_workflow_instances_step': 'workflow_instances/{}/steps/{}/delegate_auth',
                 'save_settings_with_logo_file': 'white_label/settings'
             }
@@ -49,6 +50,9 @@ class ApiEndpoints(object):
 
     def get_workflow_instance_steps(self, workflow_instance_id):
         return self.__generate_url('get_workflow_instance_steps').format(workflow_instance_id)
+
+    def get_document_link(self, workflow_instance_id):
+        return self.__generate_url('get_document_link').format(workflow_instance_id)
 
     def get_authenticated_link_for_workflow_instances_step(self, workflow_instance_id, step_id):
         return self.__generate_url('get_authenticated_link_for_workflow_instances_step').format(workflow_instance_id, step_id)
