@@ -31,6 +31,11 @@ def test_authenticated_link_for_workflow_instance_step(fake_get_workflow_steps_a
     assert 'url' in response
 
 
+def test_document_link(fake_file_downloader, hwclient):
+    response = hwclient.get_document_link("8iiSbkFMiCoqAnpG")
+    assert 'url' in response
+
+
 def test_workflow_instance_documents(fake_file_downloader, hwclient):
     response = hwclient.get_workflow_instance_documents("8iiSbkFMiCoqAnpG")
     assert response.status_code == 200
