@@ -1,4 +1,5 @@
 from .utils import ApiEndpoints, HwRequest, HwAccess, _file_downloader, _clean_dict 
+from .utils.exceptions import get_exception_message
 
 class HwClient(object):
 
@@ -73,7 +74,8 @@ class HwClient(object):
         token = self.access.get_jwt_token()
         response = self.request.put(cancel_workflow_url, token)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json()
 
     def get_workflow_instance(self, workflow_instance_id):
@@ -84,7 +86,8 @@ class HwClient(object):
         token = self.access.get_jwt_token()
         response = self.request.get(get_workflow_url, token)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json().get('data')
 
     def get_workflow_instance_document(self, workflow_instance_id, document_id, get_request=True):
@@ -123,7 +126,8 @@ class HwClient(object):
         token = self.access.get_jwt_token()
         response = self.request.get(get_workflow_instance_steps_url, token)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json().get('data')
 
     def get_document_link(self, workflow_instance_id):
@@ -136,7 +140,8 @@ class HwClient(object):
         token = self.access.get_jwt_token()
         response = self.request.get(get_document_link, token)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json().get('data')
 
     def get_authenticated_link_for_workflow_instance_step(self, workflow_instance_id, step_id):
@@ -147,7 +152,8 @@ class HwClient(object):
         token = self.access.get_jwt_token()
         response = self.request.get(get_authentiated_link_for_workflow_instances_step_url, token)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json().get('data')
 
     def save_setting_with_logo_file(self, **kwars):
@@ -166,5 +172,6 @@ class HwClient(object):
 
         response = self.request.post(endpoint, token, params)
         if response.status_code != 200:
-            raise Exception(response.json().get('error', 'internal error'))
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
         return response.json().get('data')
