@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='helloworks-python-sdk',
-    version='0.2',
+    version='0.3',
     description="A Python wrapper for the HelloWorks API  (https://portal.helloworks.com/)",
     long_description=readme(),
     long_description_content_type="text/markdown",
