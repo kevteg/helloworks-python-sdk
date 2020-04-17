@@ -1,4 +1,5 @@
-from .utils import ApiEndpoints, HwRequest, HwAccess, _file_downloader, _clean_dict 
+from .utils import ApiEndpoints, HwRequest, HwAccess
+from .utils import _file_downloader, _clean_dict, _file_extension 
 from .utils.exceptions import get_exception_message
 
 class HwClient(object):
@@ -156,8 +157,33 @@ class HwClient(object):
             raise Exception(exc_msg)
         return response.json().get('data')
 
-    def save_setting_with_logo_file(self, **kwars):
-        raise NotImplementedError('This method has not been implemented yet')
+    def save_setting_with_logo_file(self,
+                                    logo_file,
+                                    white_label_id=None,
+                                    primary_color=None,
+                                    logo_hidden=None,
+                                    team_name=None,
+                                    workflow_name=None,
+                                    stepready_email_text=None):
+        """
+            Method to create a white label ID to later be used in the workflow
+            creation.
+        """
+        token = self.access.get_jwt_token()
+        white_label_url = self.endpoints.save_settings_with_logo_file()
+        extension = _file_extension(logo_file)
+        file = (logo_file.name, logo_file, f'image/{extension}')
+        dict_response = self._post_files(white_label_url,
+                                         logo_file=file,
+                                         white_label_id=white_label_id,
+                                         primary_color=primary_color,
+                                         logo_hidden=logo_hidden,
+                                         team_name=team_name,
+                                         workflow_name=workflow_name,
+                                         stepready_email_text=stepready_email_text)
+                                                     
+
+        return dict_response
 
     def _file_endpoints(self, endpoint, file_name, get_request):
         token = self.access.get_jwt_token()
@@ -171,6 +197,16 @@ class HwClient(object):
         params = _clean_dict(params)
 
         response = self.request.post(endpoint, token, params)
+        if response.status_code != 200:
+            exc_msg = get_exception_message(response)
+            raise Exception(exc_msg)
+        return response.json().get('data')
+
+    def _post_files(self, endpoint, **params):
+        breakpoint()
+        token = self.access.get_jwt_token()
+        params = _clean_dict(params)
+        response = self.request.post(endpoint, token, None, params)
         if response.status_code != 200:
             exc_msg = get_exception_message(response)
             raise Exception(exc_msg)
