@@ -1,4 +1,5 @@
 import logging
+import _io
 logger = logging.getLogger(__name__)
 
 
@@ -21,3 +22,21 @@ def _clean_dict(dictionary):
         if not value:
             del clean_dict[key]
     return clean_dict
+
+
+def _file_extension(file):
+    '''
+    This method returns the extension of a file, or an exception if the object
+    is not a file or if it has a wrong extension
+    '''
+
+    if type(file) != _io.BufferedReader:
+        raise Exception("Wrong object type")
+
+    extensions = ['png', 'jpeg','jpg', 'gif']
+
+    extension = file.name.split('.')[-1]
+
+    if extension not in extensions:
+        raise Exception(f"Wrong file extension, must be one of {extensions}")
+    return extension
