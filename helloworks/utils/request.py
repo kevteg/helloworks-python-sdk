@@ -12,7 +12,6 @@ class HwRequest(object):
                          files=None):
         headers = {'Authorization': f'Bearer {token}'}
         request_method = getattr(requests, method)
-        breakpoint()
         return request_method(url, json=data, headers=headers, files=files)
 
     def get(self, url, token, data=None):
