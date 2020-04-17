@@ -4,17 +4,22 @@ import json
 
 class HwRequest(object):
 
-    def _process_request(self, method, url, token, data=None, stream=False, def_headers={}):
-        headers = {'Authorization': f'Bearer {token}', **def_headers}
+    def _process_request(self,
+                         method,
+                         url,
+                         token,
+                         data=None,
+                         files=None):
+        headers = {'Authorization': f'Bearer {token}'}
         request_method = getattr(requests, method)
-        return request_method(url, json=data, headers=headers, stream=stream)
+        breakpoint()
+        return request_method(url, json=data, headers=headers, files=files)
 
-    def get(self, url, token, data=None, stream=False):
-        return self._process_request('get', url, token, data, stream)
+    def get(self, url, token, data=None):
+        return self._process_request('get', url, token, data)
 
-    def post(self, url, token, data=None):
-        headers = {'Content-Type': 'application/json'}
-        return self._process_request('post', url, token, data, headers)
+    def post(self, url, token, data=None, files=None):
+        return self._process_request('post', url, token, data, files)
 
     def delete(self, url, token, data=None):
         return self._process_request('delete', url, token, data)
