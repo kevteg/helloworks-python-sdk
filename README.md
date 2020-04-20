@@ -156,6 +156,8 @@ with open('image.png', 'rb') as f:
 
 Or `io.BytesIO` (In memory file, you can follow this approach if you want to use a downloaded image):
 ```
+import io
+import requests
 response = requests.get('http://your-site.com/logo.png')
 content = response.content
 f = io.BytesIO(content)
