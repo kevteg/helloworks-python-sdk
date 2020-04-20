@@ -159,9 +159,10 @@ class HwClient(object):
 
     def save_setting_with_logo_file(self,
                                     logo_file,
+                                    logo_name=None,
                                     white_label_id=None,
                                     primary_color=None,
-                                    logo_hidden=None,
+                                    logo_hidden=True,
                                     team_name=None,
                                     workflow_name=None,
                                     stepready_email_text=None):
@@ -171,8 +172,8 @@ class HwClient(object):
         """
         token = self.access.get_jwt_token()
         white_label_url = self.endpoints.save_settings_with_logo_file()
-        extension = _file_extension(logo_file)
-        file = (logo_file.name, logo_file, f'image/{extension}')
+        extension = _file_extension(logo_file, logo_name)
+        file = ('logo', logo_file, f'image/{extension}')
         dict_response = self._post_files(white_label_url,
                                          logo_file=file,
                                          white_label_id=white_label_id,
@@ -203,7 +204,6 @@ class HwClient(object):
         return response.json().get('data')
 
     def _post_files(self, endpoint, **params):
-        breakpoint()
         token = self.access.get_jwt_token()
         params = _clean_dict(params)
         response = self.request.post(endpoint, token, None, params)
