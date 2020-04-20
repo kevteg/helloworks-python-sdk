@@ -1,6 +1,7 @@
 
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d0fdc2372d8384e6db9b/maintainability)](https://codeclimate.com/github/kevteg/helloworks-python-sdk/maintainability) [![CircleCI](https://circleci.com/gh/kevteg/helloworks-python-sdk.svg?style=svg)](https://circleci.com/gh/kevteg/helloworks-python-sdk)
+[![Downloads](https://pepy.tech/badge/helloworks-python-sdk)](https://pepy.tech/project/helloworks-python-sdk)
 
 # helloworks-python-sdk 🐍
 
@@ -144,10 +145,30 @@ Note: This link is active for only 30 seconds
 
 ## Save Settings with Logo File
 
-NotImplemented _JustYet_ Error
+Method to upload a file to be used as a branding logo for the Workflows instances
+
+You can use 2 types of objects, regular `io.BufferedReader` (returned by the open method):
+
+```
+with open('image.png', 'rb') as f:
+    response = client.save_setting_with_logo_file(logo_file=f, logo_hidden=False)
+```
+
+Or `io.BytesIO` (In memory file, you can follow this approach if you want to use a downloaded image):
+```
+response = requests.get('http://your-site.com/logo.png')
+content = response.content
+f = io.BytesIO(content)
+client.save_setting_with_logo_file(logo_file=f, logo_hidden=False, logo_name='logo.png')
+```
+
+For the second case you need to include the `logo_name` attribute
+
+Make sure your file extension is jpg, jpeg, gif or png
+
+[More info](https://docs.helloworks.com/reference#save-white-label-settings)
 
 ### TODOs
 - Create custom exceptions to improve error handling
 - Manage responses as objects similar to what HelloSign SDK does
 - Improve file management
-- Save settings with logo file
