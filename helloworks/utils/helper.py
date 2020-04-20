@@ -24,18 +24,24 @@ def _clean_dict(dictionary):
     return clean_dict
 
 
-def _file_extension(file):
+def _file_extension(file, name):
     '''
     This method returns the extension of a file, or an exception if the object
     is not a file or if it has a wrong extension
     '''
 
-    if type(file) != _io.BufferedReader:
+    if type(file) not in [_io.BufferedReader, _io.BytesIO]:
         raise Exception("Wrong object type")
 
     extensions = ['png', 'jpeg','jpg', 'gif']
+    extension = 'png'
+    name = getattr(file, 'name', name)
 
-    extension = file.name.split('.')[-1]
+    if not name:
+        raise Exception("For this file object you need to include the logo_name property")
+
+
+    extension = name.split('.')[-1]
 
     if extension not in extensions:
         raise Exception(f"Wrong file extension, must be one of {extensions}")
