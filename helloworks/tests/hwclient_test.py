@@ -1,4 +1,5 @@
 import pytest
+import _io
 
 def test_create_workflow_instance(fake_create_preview_instance, participants, hwclient):
     response = hwclient.create_workflow_instance("MECIfQ9POAngarAj", participants)
@@ -49,3 +50,21 @@ def test_workflow_instance_audit_trail(fake_file_downloader, hwclient):
 def test_workflow_instance_document(fake_file_downloader, hwclient):
     response = hwclient.get_workflow_instance_document("8iiSbkFMiCoqAnpG","Form_WnGEdO")
     assert response.status_code == 200
+
+
+def test_save_setting_with_logo_file(fake_file_uploader, hwclient):
+    f = _io.BytesIO(b'')
+    response = hwclient.save_setting_with_logo_file(logo_file=f,
+                                                    logo_hidden=False, 
+                                                    logo_name='logo.png')
+    assert 'white_label_id' in response
+
+
+def test_save_setting_with_logo_file_wrong_name(fake_file_uploader, hwclient):
+    f = _io.BytesIO(b'')
+    try:
+        response = hwclient.save_setting_with_logo_file(logo_file=f,
+                                                        logo_hidden=False, 
+                                                        logo_name='logo.pdf')
+    except Exception as e:
+        assert str(e) == "Wrong file extension, must be one of ['png', 'jpeg', 'jpg', 'gif']"
