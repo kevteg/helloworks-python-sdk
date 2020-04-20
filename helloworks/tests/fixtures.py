@@ -25,6 +25,13 @@ get_document_link_payload = {
 }
 
 
+file_uploaded = {
+  "data": {
+    "white_label_id": "123123"
+  }
+}
+
+
 def get_workflow(webhook_instance_id):
     response = {
         'data': {
@@ -142,3 +149,8 @@ def fake_file_downloader(fake_method, monkeypatch):
 
     fake_method('requests.get', {})
     monkeypatch.setattr('helloworks.utils.helper._file_downloader', fake_file_method)
+
+
+@pytest.fixture
+def fake_file_uploader(fake_method, monkeypatch):
+    fake_method('requests.post', file_uploaded)
